@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="2" total="3" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default Suite" duration-ms="8765" started-at="2022-05-22T12:39:53 EDT" finished-at="2022-05-22T12:40:02 EDT">
+    <groups>
+    </groups>
+    <test name="InterviewPrep" duration-ms="8765" started-at="2022-05-22T12:39:53 EDT" finished-at="2022-05-22T12:40:02 EDT">
+      <class name="HomeTest">
+        <test-method status="PASS" signature="setUp()[pri:0, instance:HomeTest@724af044]" name="setUp" is-config="true" duration-ms="3542" started-at="2022-05-22T12:39:53 EDT" finished-at="2022-05-22T12:39:57 EDT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method status="PASS" signature="userAccess()[pri:0, instance:HomeTest@724af044]" name="userAccess" duration-ms="5153" started-at="2022-05-22T12:39:57 EDT" description="User access" finished-at="2022-05-22T12:40:02 EDT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- userAccess -->
+        <test-method status="PASS" signature="tearDown()[pri:0, instance:HomeTest@724af044]" name="tearDown" is-config="true" duration-ms="47" started-at="2022-05-22T12:40:02 EDT" finished-at="2022-05-22T12:40:02 EDT">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- HomeTest -->
+    </test> <!-- InterviewPrep -->
+  </suite> <!-- Default Suite -->
+</testng-results>
