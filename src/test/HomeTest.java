@@ -36,46 +36,67 @@ public class HomeTest {
         Assert.assertEquals(driver.getTitle(), "Interview App");
     }
 
-    @Test (testName = "IN-2", description = "User access")
-    public void userAccess() {
+    @Test (testName = "IN-2 part 1", description = "Verify sign out button is available")
+    public void signOutButton() {
         //Verify "Sign out" is displayed and is clickable
-        Assert.assertTrue(driver.findElement(By.linkText("Sign out")).isEnabled());
+        Assert.assertTrue(driver.findElement(By.xpath("//nav//a/u[text()='Sign out']")).isEnabled());
+    }
+
+    @Test (testName = "IN-2 part 2", description = "Verify manage access button is not available for users after sign in")
+    public void manageAccessButton() {
         //Verify "Manage Access" is not available
-        Assert.assertThrows(NoSuchElementException.class, ()-> driver.findElement(By.linkText("Manage Access")));
+        Assert.assertThrows(NoSuchElementException.class, ()-> driver.findElement(By.xpath("//*[text()='Manage Access']")));
     }
 
     @Test (testName = "IN-3", description = "Default Dashboards")
     public void defaultDashboards() {
-        Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'All Topics')]")).isEnabled());
-        Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'Coding')]")).isEnabled());
-        Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'Soft skills')]")).isEnabled());
+        String[] data = {"All Topics", "Coding", "Soft skills"};
+        for (String text : data) {
+            Assert.assertTrue(driver.findElement(By.xpath("//form[@class='form-inline']//button[(text()='" + text + "')]")).isEnabled());
+        }
+        //This way contains multiple assertions, but in this case it doesn't matter - if one of them is missing, it will fail the requirement, they all need to be present
+
+        //Below is a possible scenario as well, but if a new button is added our code will be getting longer unlike the code above
+        //Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'All Topics')]")).isEnabled());
+        //Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'Coding')]")).isEnabled());
+        //Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(),'Soft skills')]")).isEnabled());
     }
 
-    @Test (testName = "IN-4 (part 1)", description = "Verifying 'Add do' and 'Add dont' buttons")
-    public void interviewStatements() {
-        Assert.assertTrue(driver.findElement(By.xpath("//div[@class='col-md-7 do']/button")).isEnabled());
-        Assert.assertTrue(driver.findElement(By.xpath("//div[@class='col-md-3 dont']/button")).isEnabled());
-    }
-
-    @Test (testName = "IN-4 (part 2)", description = "Verify user can add a message in the Dont's field")
-    public void messageInDontField() {
-        driver.findElement(By.xpath("//div[@class='col-md-3 dont']/button")).click();
-        WebElement inputField = (new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//textarea[@id='inputArea2']")))));
-        inputField.sendKeys("Test message");
+    @Test(testName = "IN-4 - Statement Do's section", description = "Verify user can add a statement in Do's section")
+    public void test05(){
+        //Adding a statement in Do's section
+        driver.findElement(By.xpath("//button[text()='Add do ']")).click();
+        driver.findElement(By.id("inputArea1")).sendKeys("IN-4 Do section test");
+        //capturing initial size of the statements right before adding a new statement
+        List<WebElement> initialList = driver.findElements(By.xpath("(//div[@class='anyClass'])[1]/div"));
+        //clicking to add the statement
         driver.findElement(By.xpath("//button[text()='Enter']")).click();
-        Assert.assertTrue(driver.findElement(By.xpath("//div[@class='col-md-7 txt even' and text()='Test message']")).isDisplayed());
+        //waiting for the list to be bigger than initial size
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("(//div[@class='anyClass'])[1]/div"), initialList.size()));
+        String expectedTest = "IN-4 Do section test";
+        String actualText = driver.findElement(By.xpath("(//div[@class='anyClass'])[1]/div[last()]/div[contains(@class, 'even') or contains(@class, 'odd')]")).getText();
+        Assert.assertEquals(actualText, expectedTest);
     }
 
-    @Test (testName = "IN-4 (part 3)", description = "Verify user can add a message in the Do's field")
-    public void messageInDoField() {
-        driver.findElement(By.xpath("//div[@class='col-md-7 do']/button")).click();
-        WebElement inputField2 = (new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//textarea[@id='inputArea1']")))));
-        inputField2.sendKeys("My message$$%%&&!#");
+    @Test(testName = "IN-4 - Statement Dont's section", description = "Verify user can add a statement in Dont's section")
+    public void test06(){
+        String expectedStatement = "IN-4 Don't section test";
+        //Adding a statement in Do's section
+        driver.findElement(By.xpath("//button[text()=\"Add don't \"]")).click();
+        driver.findElement(By.id("inputArea2")).sendKeys(expectedStatement);
+        //capturing initial size of the statements right before adding a new statement
+        List<WebElement> initialList = driver.findElements(By.xpath("(//div[@class='anyClass'])[2]/div"));
+        //clicking to add the statement
         driver.findElement(By.xpath("//button[text()='Enter']")).click();
-        Assert.assertTrue(driver.findElement(By.xpath("//div[@class='col-md-7 txt odd' and text()='My message$$%%&&!#']")).isDisplayed());
+        //waiting for the list to be bigger than initial size
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("(//div[@class='anyClass'])[2]/div"), initialList.size()));
+        String actualText = driver.findElement(By.xpath("(//div[@class='anyClass'])[2]/div[last()]/div[contains(@class, 'even') or contains(@class, 'odd')]")).getText();
+        Assert.assertEquals(actualText, expectedStatement);
     }
 
-    @Test (testName = "IN-4 (part 4)", description = "Verifying if message contains a special char")
+    @Test (testName = "IN-4 - Special chars", description = "Verifying if message contains a special char")
     public void specialCharDisplayed() {
         driver.findElement(By.xpath("//div[@class='col-md-7 do']/button")).click();
         WebElement inputField2 = (new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//textarea[@id='inputArea1']")))));
